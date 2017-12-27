@@ -1,0 +1,33 @@
+sudo apt-get install nginx
+
+sudo /etc/init.d/nginx start
+
+/usr/share/nginx/www
+
+
+
+sudo vi /etc/nginx/sites-available/default
+
+
+
+
+listen   8080;                                             ## listen for ipv4; this line is default and implied
+
+
+root /usr/share/nginx/www;
+
+
+index index.html index.htm index.php;
+
+
+
+
+location ~ .php$ {
+¡¡fastcgi_pass unix:/var/run/php5-fpm.sock;
+¡¡fastcgi_index index.php;
+¡¡include fastcgi_params;
+}
+
+sudo apt-get install php5-fpm php5-sqlite
+
+sudo /etc/init.d/nginx reload
