@@ -1,0 +1,71 @@
+二、nginx + php + sqlite
+
+1、安装nginx  web服务器 (约6MB)
+sudo apt-get install nginx
+
+
+
+2、启动nginx
+
+sudo /etc/init.d/nginx start
+
+nginx的www根目录默认在 /usr/share/nginx/www中
+
+
+
+3、修改nginx的配置文件
+sudo vi /etc/nginx/sites-available/default
+
+
+
+1)以下几个选项注意一下：
+
+listen   8080;                                             ## listen for ipv4; this line is default and implied
+
+//监听的端口号，如果与其它软件冲突，可以在这里更改
+
+root /usr/share/nginx/www;
+
+//nginx 默认路径html所在路径
+
+index index.html index.htm index.php;
+
+//nginx默认寻找的网页类型，我们可以增加一个index.php
+
+
+
+2)PHP脚本支持（不设这几项PHP脚本无法识别）
+
+找到php的定义段，将这些行的注释去掉 ，修改后内容如下
+
+location ~ .php$ {
+　fastcgi_pass unix:/var/run/php5-fpm.sock;
+　fastcgi_index index.php;
+　include fastcgi_params;
+}
+
+php段中有一些其它定义，不要去动它，比如：
+#      fastcgi_split_path_info ...
+#      fastcgi_pass 127.0.0.1:9000
+
+4)安装php和sqlite(约3MB)
+sudo apt-get install php5-fpm php5-sqlite
+
+
+
+5)重新加载nginx的配置
+sudo /etc/init.d/nginx reload
+
+
+6)测试html
+
+通过主机的IE访问树莓派，可以看到主页(表示Web服务器已正常启动)
+
+
+7)测试php
+
+在树莓派中生成一php文件
+
+sudo vi /usr/share/nginx/www/index.php
+
+在文件中输入以下内容
