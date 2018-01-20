@@ -17,10 +17,12 @@ input [`NUM_WAY-1: 0] [$clog2(`DATA_LEN)-1:0]  data_in,
 output full, near_full
 //one hot style like 111, 011, 001, 000 for 3-way
 //1:empty; 0: used
+//wrong naming, just check if next N entries are used or not from head.
 output [`NUM_WAY -1 :0] near_full_arr, //near full when empty entries is less than NUM_WAY
 output empty,
 //one hot style like 000, 100, 110, 111 for 3-way
 //1: empty, 0: used
+//wrong naming, just check if next N entries are used or not from tail.
 output [`NUM_WAY-1 : 0] near_empty_arr, //near empty when used entries is less than NUM_WAY
 output [`NUM_WAY-1: 0] [$clog2(`ADDR_LEN)-1:0] addr_out,
 output [`NUM_WAY-1: 0] [$clog2(`DATA_LEN)-1:0] data_out,
@@ -100,5 +102,11 @@ always_comb begin
 		end
 	end
 end
-	
+
+always_comb begin
+	for(logic [$clog2(NUM_WAY)-1 : 0] i = 0; i <= `NUM_WAY-1; i++) begin
+		near_empty_arr[i] = ~vld[tail+i];
+		near_full_arr[i]  = ~vld[head+i];
+	end	
+end	
 endmodule
